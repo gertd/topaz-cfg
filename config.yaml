@@ -8,13 +8,15 @@ logging:
   log_level: trace
 
 directory:
-  db_path: ${TOPAZ_DIR}/db/directory.db
+  # db_path: /db/directory.db
   seed_metadata: false
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:
-  address: "0.0.0.0:8282" # set as default, it should be the same as the reader as we resolve the identity from the local directory service.
-  insecure: true
+  address: directory.prod.aserto.com:8443
+  insecure: false
+  tenant_id: ea3504b5-fbed-11ed-b515-0046852b5687
+  api_key: ef6b605756b3cae79493b80d82b7117ff84e807eab02cee3fea1e7aefc4e8428
 
 # default jwt validation configuration
 jwt:
@@ -39,144 +41,144 @@ api:
         - https://*.aserto.com
         - https://*aserto-console.netlify.app
         certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+          tls_key_path: "/certs/gateway.key"
+          tls_cert_path: "/certs/gateway.crt"
+          tls_ca_cert_path: "$/certs/gateway-ca.crt"
       grpc:
         listen_address: "0.0.0.0:8081"
         certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
-    reader:
-      grpc:
-        listen_address: "0.0.0.0:8282"
-        # if certs are not specified default certs will be generate with the format reader_grpc.*
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
-      gateway:
-        listen_address: "0.0.0.0:8383"
-        # if not specified, the allowed_origins includes localhost by default
-        allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        # if no certs are specified, the gateway will have the http flag enabled (http: true)
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
-        http: false
-        read_timeout: 2s # default 2 seconds
-        read_header_timeout: 2s
-        write_timeout: 2s
-        idle_timeout: 30s # default 30 seconds      
-    writer:
-      grpc:
-        listen_address: "0.0.0.0:8282"
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
-      gateway:
-        listen_address: "0.0.0.0:8383"
-        allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
-        http: false
-        read_timeout: 2s
-        read_header_timeout: 2s
-        write_timeout: 2s
-        idle_timeout: 30s
-    model:
-      grpc:
-        listen_address: "0.0.0.0:8282"
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
-      gateway:
-        listen_address: "0.0.0.0:8383"
-        allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
-        http: false
-        read_timeout: 2s
-        read_header_timeout: 2s
-        write_timeout: 2s
-        idle_timeout: 30s
-    exporter:
-      grpc:
-        listen_address: "0.0.0.0:8282"
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
-      gateway:
-        listen_address: "0.0.0.0:8383"
-        allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
-        http: false
-        read_timeout: 2s
-        read_header_timeout: 2s
-        write_timeout: 2s
-        idle_timeout: 30s
-    importer:
-      grpc:
-        listen_address: "0.0.0.0:8282"
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
-      gateway:
-        listen_address: "0.0.0.0:8383"
-        allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
-        http: false
-        read_timeout: 2s
-        read_header_timeout: 2s
-        write_timeout: 2s
-        idle_timeout: 30s
+          tls_key_path: "/certs/grpc.key"
+          tls_cert_path: "/certs/grpc.crt"
+          tls_ca_cert_path: "/certs/grpc-ca.crt"
+    # reader:
+    #   grpc:
+    #     listen_address: "0.0.0.0:8282"
+    #     # if certs are not specified default certs will be generate with the format reader_grpc.*
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+    #   gateway:
+    #     listen_address: "0.0.0.0:8383"
+    #     # if not specified, the allowed_origins includes localhost by default
+    #     allowed_origins:
+    #     - http://localhost
+    #     - http://localhost:*
+    #     - https://localhost
+    #     - https://localhost:*
+    #     - https://0.0.0.0:*
+    #     - https://*.aserto.com
+    #     - https://*aserto-console.netlify.app
+    #     # if no certs are specified, the gateway will have the http flag enabled (http: true)
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+    #     http: false
+    #     read_timeout: 2s # default 2 seconds
+    #     read_header_timeout: 2s
+    #     write_timeout: 2s
+    #     idle_timeout: 30s # default 30 seconds      
+    # writer:
+    #   grpc:
+    #     listen_address: "0.0.0.0:8282"
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+    #   gateway:
+    #     listen_address: "0.0.0.0:8383"
+    #     allowed_origins:
+    #     - http://localhost
+    #     - http://localhost:*
+    #     - https://localhost
+    #     - https://localhost:*
+    #     - https://*.aserto.com
+    #     - https://*aserto-console.netlify.app
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+    #     http: false
+    #     read_timeout: 2s
+    #     read_header_timeout: 2s
+    #     write_timeout: 2s
+    #     idle_timeout: 30s
+    # model:
+    #   grpc:
+    #     listen_address: "0.0.0.0:8282"
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+    #   gateway:
+    #     listen_address: "0.0.0.0:8383"
+    #     allowed_origins:
+    #     - http://localhost
+    #     - http://localhost:*
+    #     - https://localhost
+    #     - https://localhost:*
+    #     - https://*.aserto.com
+    #     - https://*aserto-console.netlify.app
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+    #     http: false
+    #     read_timeout: 2s
+    #     read_header_timeout: 2s
+    #     write_timeout: 2s
+    #     idle_timeout: 30s
+    # exporter:
+    #   grpc:
+    #     listen_address: "0.0.0.0:8282"
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+    #   gateway:
+    #     listen_address: "0.0.0.0:8383"
+    #     allowed_origins:
+    #     - http://localhost
+    #     - http://localhost:*
+    #     - https://localhost
+    #     - https://localhost:*
+    #     - https://*.aserto.com
+    #     - https://*aserto-console.netlify.app
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+    #     http: false
+    #     read_timeout: 2s
+    #     read_header_timeout: 2s
+    #     write_timeout: 2s
+    #     idle_timeout: 30s
+    # importer:
+    #   grpc:
+    #     listen_address: "0.0.0.0:8282"
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+    #   gateway:
+    #     listen_address: "0.0.0.0:8383"
+    #     allowed_origins:
+    #     - http://localhost
+    #     - http://localhost:*
+    #     - https://localhost
+    #     - https://localhost:*
+    #     - https://*.aserto.com
+    #     - https://*aserto-console.netlify.app
+    #     certs:
+    #       tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+    #       tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+    #       tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+    #     http: false
+    #     read_timeout: 2s
+    #     read_header_timeout: 2s
+    #     write_timeout: 2s
+    #     idle_timeout: 30s
   
     authorizer:
       needs:
