@@ -13,7 +13,7 @@ directory:
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:
-  address: 0.0.0.0:9292
+  address: 0.0.0.0:8282
   insecure: true
 
 # default jwt validation configuration
@@ -22,42 +22,42 @@ jwt:
 
 api:
   health:
-    listen_address: "0.0.0.0:9494"
+    listen_address: "0.0.0.0:8484"
   metrics:
-    listen_address: "0.0.0.0:9696"
+    listen_address: "0.0.0.0:8686"
     zpages: true
   services:
     console:
       gateway:
-        listen_address: "0.0.0.0:8080"
+        listen_address: "0.0.0.0:8383"
         allowed_origins:
         - http://localhost
         - http://localhost:*
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
           tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
       grpc:
-        listen_address: "0.0.0.0:8081"
+        listen_address: "0.0.0.0:8282"
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
           tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     reader:
       grpc:
-        listen_address: "0.0.0.0:9292"
+        listen_address: "0.0.0.0:8282"
         # if certs are not specified default certs will be generate with the format reader_grpc.*
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
           tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
       gateway:
-        listen_address: "0.0.0.0:9393"
+        listen_address: "0.0.0.0:8383"
         # if not specified, the allowed_origins includes localhost by default
         allowed_origins:
         - http://localhost
@@ -65,8 +65,8 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
         # if no certs are specified, the gateway will have the http flag enabled (http: true)
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
@@ -79,20 +79,20 @@ api:
         idle_timeout: 30s # default 30 seconds      
     writer:
       grpc:
-        listen_address: "0.0.0.0:9292"
+        listen_address: "0.0.0.0:8282"
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
           tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
       gateway:
-        listen_address: "0.0.0.0:9393"
+        listen_address: "0.0.0.0:8383"
         allowed_origins:
         - http://localhost
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
@@ -104,20 +104,20 @@ api:
         idle_timeout: 30s
     model:
       grpc:
-        listen_address: "0.0.0.0:9292"
+        listen_address: "0.0.0.0:8282"
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
           tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
       gateway:
-        listen_address: "0.0.0.0:9393"
+        listen_address: "0.0.0.0:8383"
         allowed_origins:
         - http://localhost
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
@@ -129,20 +129,20 @@ api:
         idle_timeout: 30s
     exporter:
       grpc:
-        listen_address: "0.0.0.0:9292"
+        listen_address: "0.0.0.0:8282"
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
           tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
       gateway:
-        listen_address: "0.0.0.0:9393"
+        listen_address: "0.0.0.0:8383"
         allowed_origins:
         - http://localhost
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
@@ -154,20 +154,20 @@ api:
         idle_timeout: 30s
     importer:
       grpc:
-        listen_address: "0.0.0.0:9292"
+        listen_address: "0.0.0.0:8282"
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
           tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
       gateway:
-        listen_address: "0.0.0.0:9393"
+        listen_address: "0.0.0.0:8383"
         allowed_origins:
         - http://localhost
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
@@ -196,8 +196,8 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
         certs:
           tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
           tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
