@@ -1,4 +1,4 @@
-/certs/
-/cfg/
-/config/
-/db/
+.dev/
+.ext/
+
+deploy/

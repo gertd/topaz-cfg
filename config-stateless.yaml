@@ -1,0 +1,191 @@
+
+# yaml-language-server: $schema=https://topaz.sh/schema/config.json
+---
+# config schema version
+version: 2
+
+# logger settings.
+logging:
+  prod: true
+  log_level: info
+  grpc_log_level: info
+
+# debug service settings
+debug_service:
+  enabled: false
+  listen_address: ""
+  shutdown_timeout: 0
+
+# edge directory configuration.
+directory:
+  db_path: ''
+
+# remote directory is used to resolve the identity for the authorizer.
+remote_directory:
+  address: "${DIRECTORY_SVC}"
+  insecure: false
+  tenant_id: "${TENANT_ID}"
+  api_key: "${DIRECTORY_KEY}"
+  token: ""
+  client_cert_path: ""
+  client_key_path: ""
+  ca_cert_path: ""
+  timeout_in_seconds: 5
+  headers:
+
+# default jwt validation configuration
+jwt:
+  acceptable_time_skew_seconds: 5 # set as default, 5 secs
+
+# authentication configuration
+auth:
+  api_keys:
+  options:
+    default:
+      enable_api_key: true
+      enable_anonymous: false
+    overrides:
+      paths:
+        - /aserto.authorizer.v2.Authorizer/Info
+        - /grpc.reflection.v1.ServerReflection/ServerReflectionInfo
+        - /grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo
+      override:
+        enable_anonymous: true
+        enable_api_key: false
+
+api:
+  health:
+    listen_address: "0.0.0.0:9494"
+
+  metrics:
+    listen_address: "0.0.0.0:9696"
+    zpages: true
+
+  services:
+    console:
+      grpc:
+        listen_address: "0.0.0.0:8443"
+        fqdn: ""
+        certs:
+          tls_key_path: '/certs/grpc.key'
+          tls_cert_path: '/certs/grpc.crt'
+          tls_ca_cert_path: '/certs/grpc-ca.crt'
+      gateway:
+        listen_address: "0.0.0.0:443"
+        fqdn: ${FQDN}
+        certs:
+          tls_key_path: '/certs/gateway.key'
+          tls_cert_path: '/certs/gateway.crt'
+          tls_ca_cert_path: '/certs/gateway-ca.crt'
+        allowed_origins:
+        - https://localhost
+        - https://localhost:*
+        - https://0.0.0.0:*
+        - https://*.aserto.com
+        - https://directory.prod.aserto.com
+        - ${FQDN}
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
+        http: false
+        read_timeout: 2s
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s
+
+    authorizer:
+      needs:
+        - reader
+      grpc:
+        connection_timeout_seconds: 2
+        listen_address: "0.0.0.0:8443"
+        certs:
+          tls_key_path: '/certs/grpc.key'
+          tls_cert_path: '/certs/grpc.crt'
+          tls_ca_cert_path: '/certs/grpc-ca.crt'
+      gateway:
+        listen_address: "0.0.0.0:443"
+        fqdn: ${FQDN}
+        certs:
+          tls_key_path: '/certs/gateway.key'
+          tls_cert_path: '/certs/gateway.crt'
+          tls_ca_cert_path: '/certs/gateway-ca.crt'
+        allowed_origins:
+        - https://localhost
+        - https://localhost:*
+        - https://0.0.0.0:*
+        - https://*.aserto.com
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"          
+        http: false
+        read_timeout: 2s
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s
+
+opa:
+  instance_id: "${TENANT_ID}"
+  graceful_shutdown_period_seconds: 2
+  config:
+    services:
+      aserto-discovery:
+        url: "${DISCOVERY_SVC}"
+        credentials:
+          bearer:
+            token: "${DISCOVERY_KEY}"
+            scheme: 'basic'
+        headers:
+          Aserto-Tenant-Id: "${TENANT_ID}"
+    discovery:
+      service: aserto-discovery
+      resource: "${POLICY_NAME}/${POLICY_NAME}/opa"
+
+controller:
+  enabled: true
+  server:
+    address: relay.prod.aserto.com:8443
+    client_cert_path: '/sidecar/sidecar.crt'
+    client_key_path: '/sidecar/sidecar.key'
+
+decision_logger:
+  type: self
+  config:
+    store_directory: "/decisions"
+    scribe:
+      address: ems.prod.aserto.com:8443
+      client_cert_path: '/sidecar/sidecar.crt'
+      client_key_path: '/sidecar/sidecar.key'
+      ack_wait_seconds: 30
+      headers:
+        Aserto-Tenant-Id: "${TENANT_ID}"
+    shipper:
+      publish_timeout_seconds: 2
